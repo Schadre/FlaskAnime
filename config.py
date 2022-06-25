@@ -14,3 +14,5 @@ class Config():
     SECRET_KEY = os.environ.get('WOW_KEY') or 'Brandon is an awesome teacher'
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or 'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_NOTIFICAITONS = False
+
+    # backend info

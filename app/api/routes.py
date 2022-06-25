@@ -60,3 +60,5 @@ def delete_anime(current_user_token, id):
     db.session.commit()
     response = anime_schema.dump(anime)
     return jsonify(response)
+
+# detailed routes for my animes

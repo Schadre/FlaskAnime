@@ -76,3 +76,5 @@ class AnimeSchema(ma.Schema):
 
 anime_schema = AnimeSchema()
 animes_schema = AnimeSchema(many=True)
+
+#AnimeQuotesCRUD
