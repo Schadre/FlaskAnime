@@ -49,32 +49,30 @@ class User(db.Model, UserMixin):
         return f'User {self.email} has been added to the database'
 
 
-class Contact(db.Model):
+class Anime(db.Model):
     id = db.Column(db.String, primary_key = True)
     name = db.Column(db.String(150), nullable = False)
-    email = db.Column(db.String(200))
-    phone_number = db.Column(db.String(20))
-    address = db.Column(db.String(200))
+    character = db.Column(db.String(200))
+    quote = db.Column(db.String(300))
     user_token = db.Column(db.String, db.ForeignKey('user.token'), nullable = False)
 
-    def __init__(self,name,email,phone_number,address,user_token, id = ''):
+    def __init__(self,name,character,quote,user_token, id = ''):
         self.id = self.set_id()
         self.name = name
-        self.email = email
-        self.phone_number = phone_number
-        self.address = address
+        self.character = character
+        self.quote = quote
         self.user_token = user_token
 
 
     def __repr__(self):
-        return f'The following contact has been added to the phonebook: {self.name}'
+        return f'The following character has been added to the database: {self.name}'
 
     def set_id(self):
         return (secrets.token_urlsafe())
 
-class ContactSchema(ma.Schema):
+class AnimeSchema(ma.Schema):
     class Meta:
-        fields = ['id', 'name','email','phone_number', 'address']
+        fields = ['id', 'name','character','quote']
 
-contact_schema = ContactSchema()
-contacts_schema = ContactSchema(many=True)
+anime_schema = AnimeSchema()
+animes_schema = AnimeSchema(many=True)

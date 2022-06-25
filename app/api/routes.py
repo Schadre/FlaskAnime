@@ -1,7 +1,7 @@
 from locale import currency
 from flask import Blueprint, request, jsonify, render_template
 from helpers import token_required
-from models import db, User, Contact, contact_schema, contacts_schema
+from models import db, User, Anime, anime_schema, animes_schema
 
 api = Blueprint('api',__name__, url_prefix='/api')
 
@@ -9,66 +9,54 @@ api = Blueprint('api',__name__, url_prefix='/api')
 def getdata():
     return {'yee': 'haw'}
 
-@api.route('/contacts', methods = ['POST'])
+@api.route('/animes', methods = ['POST'])
 @token_required
-def create_contact(current_user_token):
+def create_anime(current_user_token):
     name = request.json['name']
-    email = request.json['email']
-    phone_number = request.json['phone_number']
-    address = request.json['address']
+    character = request.json['character']
+    quote = request.json['quote']
     user_token = current_user_token.token
 
     print(f'BIG TESTER: {current_user_token.token}')
 
-    contact = Contact(name, email, phone_number, address, user_token = user_token )
+    anime = Anime(name, character, quote, user_token = user_token )
 
-    db.session.add(contact)
+    db.session.add(anime)
     db.session.commit()
 
-    response = contact_schema.dump(contact)
+    response = anime_schema.dump(anime)
     return jsonify(response)
 
-@api.route('/contacts', methods = ['GET'])
+@api.route('/animes', methods = ['GET'])
 @token_required
-def get_contact(current_user_token):
+def get_anime(current_user_token):
     a_user = current_user_token.token
-    contacts = Contact.query.filter_by(user_token = a_user).all()
-    response = contacts_schema.dump(contacts)
+    animes = Anime.query.filter_by(user_token = a_user).all()
+    response = animes_schema.dump(animes)
     return jsonify(response)
 
-#Optional might not work
-# @api.route('/contacts/<id>', methods = ['GET'])
-# @token_required
-# def get_single_contact(current_user_token, id):
-#     fan = current_user_token.token
-#     if fan: 
-#         contact = Contact.query.get(id)
-#         response = contact_schema.dump(contact)
-#         return jsonify(response)
-#     else:
-#         return jsonify({"message":"valid token required"}), 401
+
 
 #Update End point
-@api.route('contacts/<id>', methods = ['POST', 'PUT'])
+@api.route('animes/<id>', methods = ['POST', 'PUT'])
 @token_required
-def update_contact(current_user_token, id):
-    contact = Contact.query.get(id)
-    contact.name = request.json['name']
-    contact.email = request.json['email']
-    contact.phone_number = request.json['phone_number']
-    contact.address = request.json['address']
-    contact.user_token = current_user_token.token
+def update_anime(current_user_token, id):
+    anime = Anime.query.get(id)
+    anime.name = request.json['name']
+    anime.character = request.json['character']
+    anime.quote = request.json['quote']
+    anime.user_token = current_user_token.token
 
     db.session.commit()
-    response = contact_schema.dump(contact)
+    response = anime_schema.dump(anime)
     return jsonify(response)
 
 # Delete Endpoint
-@api.route('/contacts/<id>', methods = ['DELETE'])
+@api.route('/animes/<id>', methods = ['DELETE'])
 @token_required
-def delete_contact(current_user_token, id):
-    contact = Contact.query.get(id)
-    db.session.delete(contact)
+def delete_anime(current_user_token, id):
+    anime = Anime.query.get(id)
+    db.session.delete(anime)
     db.session.commit()
-    response = contact_schema.dump(contact)
+    response = anime_schema.dump(anime)
     return jsonify(response)
